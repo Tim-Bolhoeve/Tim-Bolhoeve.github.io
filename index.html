@@ -1,9 +1,53 @@
-<h1>Barbie</h1>
-<iframe width="560" height="315" 
-src="https://vidsrc.to/embed/movie/tt1517268" title="Movie video player" 
-frameborder="0" allowfullscreen></iframe>
-<hr>
-<h1>Indiana Jones and the Raiders of the Lost Ark</h1>
-<iframe width="560" height="315" 
-src="https://vidsrc.to/embed/movie/tt0082971" title="Movie video player" 
-frameborder="0" allowfullscreen></iframe>
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+    <body onload="getanswer(document.getElementById('querybox').value)">
+        <h3>Search for a movie</h3>
+        <input id="querybox"><span> > Press enter inside the box to submit</span>
+        <hr>
+        <div id="movie"></div> 
+
+        <script>
+            var input = document.getElementById("querybox");
+            input.addEventListener("keypress", function(event) {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                getanswer(document.getElementById('querybox').value);
+              }
+            });
+        </script>
+
+        <script>
+            var data;
+            function getanswer(q){
+                $.get("https://www.omdbapi.com/?t="+q+"&apikey=ba1f4581", function(rawdata){
+                var rawstring =JSON.stringify(rawdata);
+                data =JSON.parse(rawstring);
+                console.log(data);
+                var title = data.Title;
+                var year = data.Year; 
+                var director = data.Director; 
+                var imdburl="https://www.imdb.com/title/"+data.imdbID+"/";
+                var movie = "https://vidsrc.to/embed/movie/"+data.imdbID+"/"
+
+                var posterurl =data.Poster;
+                document.getElementById('movie').innerHTML="<h1>"
+                    +title+"</h1><br> <iframe width='560' height='315' src='"+movie+"'></iframe><br><p> Year Released:"+year
+                        +"</p> <br><p> Director: "+director+"</p> <br> <p> IMDB page: <a href='"
+                            +imdburl+"'target='_blank'>"+imdburl+"</a></p><iframe width='560' height='315' src='"+movie+"' "; }); 
+            }
+        </script>
+    </body>
+</html>
